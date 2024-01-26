@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Productos</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+
+    <h1>Lista de Productos</h1>
+    <br/>
+    <h1><a href="/registrar" class="btn btn-primary">Nuevo</a></h1>
+    <br/>
+    <table class="table table-responsive table-sm table-dark table-striped table-bordered table-hover">
+        <thead>
+        <tr class="info">
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Precio</th>
+            <th>Stock</th>
+            <th>Opciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <th:block th:each="p : ${lista}">
+            <tr>
+                <td th:text="${p.id}"></td>
+                <td th:text="${p.nombre}"></td>
+                <td th:text="${p.precio}"></td>
+                <td th:text="${p.stock}"></td>
+                <td>
+                    <a th:href="@{/editar/{producto}(producto=${p.id})}">Editar</a>
+                    <a href="#" th:attr="data-producto=${p.id},data-productoName=${p.nombre}" th:onclick="eliminar(this.getAttribute('data-producto'),this.getAttribute('data-productoName'))">Eliminar</a>
+                </td>
+            </tr>
+        </th:block>
+        </tbody>
+    </table>
+    <br/>
+    <script>
+        function eliminar(producto,productoName){
+            if(confirm('¿Está seguro que desea eliminar a ' + productoName + '?')){
+                $.ajax({
+                    type: "POST",
+                    url: "/eliminar",
+                    data: {
+                        producto: producto
+                    },
+                    success: function(response){
+                        window.location.href = "/listarProductos";
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>
